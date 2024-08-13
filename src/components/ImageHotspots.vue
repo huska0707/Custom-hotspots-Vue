@@ -3,8 +3,8 @@
     <img :src="imageSrc" alt="Hotspot Image" class="image" @click="handleClick($event)" />
     <div
       v-for="(hotspot, index) in hotspots"
-      :key="index"
       class="hotspot"
+      :key="index"
       :style="{ top: hotspot.top, left: hotspot.left }"
       @click="performAction(hotspot.action)"
     >
@@ -73,14 +73,85 @@ export default {
   width: 100%;
   height: auto;
 }
+
 .hotspot {
+  z-index: 2;
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  cursor: pointer;
+  display: block;
+
+  span {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.8em;
+    height: 1.8em;
+    background: #cf00f1;
+    border-radius: 50%;
+    animation: pulse 3s ease infinite;
+    transition: background 0.3s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      color: white;
+      text-shadow: 0 1px black;
+      font-weight: 600;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: translate(-50%, 10%) scale(0.5);
+      transition: all 0.25s;
+    }
+  }
+
+  svg {
+    opacity: 0;
+    color: #cf00f1;
+    font-size: 1.4em;
+    transition: opacity 0.2s;
+  }
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &:before {
+    z-index: -1;
+    border: 0.15em solid rgba(#fff, 0.9);
+    opacity: 0;
+    transform: scale(2);
+    transition: transform 0.25s, opacity 0.2s;
+  }
+
+  &:after {
+    z-index: -2;
+    background: #fff;
+    animation: wave 3s linear infinite;
+  }
 }
+
+@keyframes wave {
+  0% {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
 .hotspot-marker {
   display: block;
   width: 100%;
