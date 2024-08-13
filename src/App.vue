@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <ImageHotspots />
+    <ImageHotspots imageUrl="assets/world.jpg" />
   </div>
 </template>
 
 <script>
-import ImageHotspots from './components/ImageHotspots';
+import ImageHotspots from "./components/ImageHotspots";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     ImageHotspots,
   },

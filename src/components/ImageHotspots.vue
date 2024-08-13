@@ -7,9 +7,9 @@
       :key="index"
       :style="{ top: hotspot.top, left: hotspot.left }"
       :data-action="hotspot.action"
-      @click="performAction(hotspot.action)"
+      @click="performAction(hotspot.action, index)"
     >
-      <span :data-action="hotspot.action"></span>
+      <span :data-action="hotspot.label"></span>
     </div>
   </div>
 </template>
@@ -17,29 +17,36 @@
 <script>
 export default {
   name: "ImageHotspots",
+  props: {
+    imageUrl: String,
+  },
   data() {
     return {
-      imageSrc: require("@/assets/world.jpg"),
+      imageSrc: this.imageUrl,
+      isZoomIn: false,
       hotspots: [
-        { top: "20%", left: "30%", action: "showMessage" },
-        { top: "50%", left: "50%", action: "zoomIn" },
-        { top: "70%", left: "20%", action: "navigateToView" },
-        { top: "80%", left: "60%", action: "showForm" },
-        { top: "40%", left: "80%", action: "showAlert" },
+        { top: "20%", left: "30%", action: "showMessage", label: "Show Message" },
+        { top: "50%", left: "50%", action: "toggleZoom", label: "Zoom In" },
+        { top: "70%", left: "20%", action: "navigateToView", label: "Go Back" },
+        { top: "80%", left: "60%", action: "showForm", label: "Show Form" },
+        { top: "40%", left: "80%", action: "showAlert", label: "Show Alert" },
       ],
     };
   },
+
   methods: {
-    performAction(action) {
+    performAction(action, index) {
       switch (action) {
         case "showMessage":
           alert("Hello!");
           break;
-        case "zoomIn":
-          this.zoomImage();
+        case "toggleZoom":
+          // this.zoomImage();
+          this.toggleZoom(index);
           break;
         case "navigateToView":
-          this.$router.push({ name: "AnotherView" });
+          // this.$router.push({ name: "AnotherView" });
+          this.$router.go(-1);
           break;
         case "showForm":
           // Implement form display logic here
@@ -51,8 +58,27 @@ export default {
           console.log("Unknown action");
       }
     },
-    zoomImage() {
+    // zoomImage() {
+    //   this.$refs.imageContainer.style.transform = "scale(1.5)";
+    //   this.$refs.imageContainer.style.transition = "transform 0.3s ease-in-out";
+    // },
+
+    toggleZoom(index) {
+      if (this.isZoomedIn) {
+        this.zoomOut();
+        this.hotspots[index].label = "Zoom In";
+      } else {
+        this.zoomIn();
+        this.hotspots[index].label = "Zoom Out";
+      }
+      this.isZoomedIn = !this.isZoomedIn;
+    },
+    zoomIn() {
       this.$refs.imageContainer.style.transform = "scale(1.5)";
+      this.$refs.imageContainer.style.transition = "transform 0.3s ease-in-out";
+    },
+    zoomOut() {
+      this.$refs.imageContainer.style.transform = "scale(1)";
       this.$refs.imageContainer.style.transition = "transform 0.3s ease-in-out";
     },
     handleClick(event) {
@@ -100,8 +126,8 @@ export default {
       left: 50%;
       color: white;
       text-shadow: 0 1px black;
-      font-weight: 600;
-      font-size: 1.2em;
+      font-weight: 400;
+      font-size: 20px;
       opacity: 0;
       transform: translate(-50%, 10%) scale(0.5);
       transition: all 0.25s;
