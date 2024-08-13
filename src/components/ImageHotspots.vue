@@ -6,9 +6,10 @@
       class="hotspot"
       :key="index"
       :style="{ top: hotspot.top, left: hotspot.left }"
+      :data-action="hotspot.action"
       @click="performAction(hotspot.action)"
     >
-      <span class="hotspot-marker"></span>
+      <span :data-action="hotspot.action"></span>
     </div>
   </div>
 </template>
@@ -92,15 +93,15 @@ export default {
     transition: background 0.3s;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 
-    &::after {
-      content: "";
+    &:after {
+      content: attr(data-action);
       position: absolute;
       bottom: 130%;
       left: 50%;
       color: white;
       text-shadow: 0 1px black;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.2em;
       opacity: 0;
       transform: translate(-50%, 10%) scale(0.5);
       transition: all 0.25s;
@@ -124,11 +125,12 @@ export default {
     height: 100%;
     border-radius: 50%;
     pointer-events: none;
+    box-sizing: border-box;
   }
 
   &:before {
     z-index: -1;
-    border: 0.15em solid rgba(#fff, 0.9);
+    border: 0.15em solid #ffffff88;
     opacity: 0;
     transform: scale(2);
     transition: transform 0.25s, opacity 0.2s;
@@ -138,6 +140,54 @@ export default {
     z-index: -2;
     background: #fff;
     animation: wave 3s linear infinite;
+  }
+
+  &:hover {
+    span {
+      animation: none;
+      background: #fff;
+
+      &:after {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+    }
+
+    svg {
+      opacity: 1;
+    }
+
+    &:before {
+      opacity: 1;
+      transform: scale(1.5);
+      animation: borderColor 2s linear infinite;
+    }
+    &:after {
+      animation: none;
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes borderColor {
+  0% {
+    border-color: #fff;
+  }
+  50% {
+    border-color: #cf00f1;
+  }
+  100% {
+    border-color: #fff;
   }
 }
 
